@@ -12,11 +12,17 @@ body {
     background-size: cover;
     background-position: top;
     background-attachment: fixed;
-    min-height: 100vh;
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
+    height: 100vh;
+    padding: 0;
 }
+
+header {
+    min-height: 30% !important;
+}
+
+/* main {
+    min-height: 56.4% !important;
+} */
 
 nav {
     min-height: 13vh;
@@ -25,12 +31,8 @@ nav {
     border-bottom-right-radius: 1rem;
 }
 
-header {
-    min-height: 30vh;
-}
-
 footer {
-    min-height: 10vh;
+    min-height: 10% !important;
 }
 
 nav > a {
@@ -116,6 +118,10 @@ main {
 }
 
 /* Cards */
+#cards {
+    height: 100% !important;
+}
+
 .card {
     background-color: rgb(42, 5, 50);
     width: 280px;

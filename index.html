@@ -10,7 +10,6 @@
     <link rel="stylesheet" href="./assets/styles/style.css">
 </head>
 <body class="container-fluid px-0 justify-content-center align-items-center">
-    
     <header class="row mx-0 justify-content-center align-items-center" id="topPage">
         <nav class="row navbar navbar-expand-lg">
             <div class="container-fluid justify-content-center text-lg-start text-center">
@@ -60,14 +59,14 @@
     </header>
         
     <main class="container-lg container-fluid mt-3" id="app">
-        <form class="row my-4 p-3 filter" @input="filterByCheckbox(); filterBySearcher()">
+        <form class="row my-4 p-3 filter">
             <fieldset class="col-12 d-flex justify-content-evenly flex-wrap pb-2" id="checkboxs">
-                <label class="d-flex justify-content-evenly align-items-center" v-for="(checkbox, index) of checkboxs">
-                    <input type="checkbox" :name="checkbox" :value="checkbox">
+                <label class="d-flex justify-content-evenly align-items-center" v-for="checkbox of checkboxs">
+                    <input type="checkbox" :name="checkbox" :value="checkbox" v-model="checkboxsFilter">
                     <span>{{checkbox}}</span>
                 </label>
             </fieldset>
-
+            {{filterCards}}
             <fieldset class="form-searcher col-12 d-flex justify-content-end">
                 <input class="me-2" type="search" placeholder="Search" aria-label="Search" v-model="search">
             </fieldset>
@@ -90,7 +89,7 @@
                     </div>
                 </div>
             </article>
-            <article v-if="events[0] == null">
+            <article v-if="!events.length">
                 <h2 class="text-center">Not Found</h2>
             </article>
         </div>

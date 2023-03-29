@@ -1,81 +1,66 @@
 // Variables
 const { createApp } = Vue;
 
-createApp({
+const app = createApp({
     data() {
         return{
             urlApi: `https://mindhub-xj03.onrender.com/api/amazing`,
-            data: {},
             events: [],
             eventsFilter: [],
             checkboxs: [],
+            checkboxsFilter: [],
             search: ``,
             time: `past`,
         }
     },
-    async mounted(){
-        try {
-            const response = await axios.get(this.urlApi);
-            this.data = response.data;
-
-            this.filterByDate();
-
-            this.checkboxs = new Set(this.eventsFilter.map(item => item.category));
-
-        } catch (error) {
-            const responseJson = await axios.get(`./assets/data/data.json`);
-            this.data = responseJson.data;
-
-            this.filterByDate();
-
-            this.checkboxs = new Set(this.eventsFilter.map(item => item.category));
-        }
+    created(){
+        this.getData();
+    },
+    mounted(){
     },
     methods:{
-        filterByCheckbox: function() {
+        getData: async function() {
+            try {
+                const response = await axios.get(this.urlApi);
+                this.filterByDate(response.data.currentDate, response.data.events);
+                this.eventsFilter = this.events;
+                this.getCategorys(this.events);
+                
+            } catch (error) {
+                const responseJson = await axios.get(`./assets/data/data.json`);
+                this.filterByDate(responseJson.data.currentDate, responseJson.data.events);
+                this.eventsFilter = this.events;
+                this.getCategorys(this.events);
+            }
+        },
+        getCategorys: function(array) {
+            this.checkboxs = new Set(array.map(element => element.category));
+        },
+        filterByDate: function(currentDate, events) {
+            let newArray = [];
+
+            if (this.time == "past") {
+                newArray = events.filter(item => item.date < currentDate);
+            } else {
+                newArray = events.filter(item => item.date > currentDate);
+            }
+
+            this.events = newArray;
+        }
+    },
+    computed:{
+        filterCards: function() {
             let arrayNew = this.events;
-            let checkboxs = Array.from(document.querySelectorAll(`input[type='checkbox']`));
-            let checkboxsChecked = checkboxs.filter(item => item.checked);
-    
-            if (checkboxsChecked.length > 0) {
-                arrayNew = checkboxsChecked.reduce((accumulator, currentElement) => {
-                    return accumulator.concat(this.events.filter(item => currentElement.value == item.category))
-                },[]);
+
+            if (this.checkboxsFilter.length > 0) {
+                arrayNew = this.events.filter(item => this.checkboxsFilter.includes(item.category));
             }
     
-            this.eventsFilter = arrayNew;
-        },
-        filterBySearcher: function() {
-            let arrayNew = this.eventsFilter;
-
             if (this.search != ``) {
                 arrayNew = arrayNew.filter(item => item.name.toLowerCase().includes(this.search.toLowerCase()));
             };
     
             this.eventsFilter = arrayNew;
         },
-        filterByDate: function() {
-            let newArray = [];
-
-            if (this.time == "past") {
-                newArray = this.data.events.filter(item => item.date < this.data.currentDate);
-            } else {
-                newArray = this.data.events.filter(item => item.date > this.data.currentDate);
-            }
-
-            // Los ordeno por relevancia segun la fecha
-            let sortArray = (newArray).sort((a, b) => {
-                if (a.date > b.date) {
-                    return -1;
-                }
-                if (a.date < b.date) {
-                    return 1;
-                }
-                return 0;
-            });
-
-            this.events = sortArray;
-            this.eventsFilter = this.events;
-        }
     }
 }).mount('#app');
