@@ -1,124 +1,95 @@
 // Variables
-const urlApi = `https://mindhub-xj03.onrender.com/api/amazing`;
-let pastEvent = [];
-let upcomingEvent = [];
-let table = document.querySelectorAll(`tbody`);
+const { createApp } = Vue;
 
-
-
-// Main
-main(urlApi, pastEvent, upcomingEvent, table);
-
-
-
-// Funtions
-async function main(url, pastArray, upcomingArray, containers) {
-    try {
-        const promise = await fetch(url);
-        let data;
-
-        if (promise.status == 200) {
-            data = await promise.json();
-        } else {
-            const promiseJson = await fetch(`./assets/data/data.json`);
-            data = await promiseJson.json();
+const app = createApp({
+    data() {
+        return{
+            urlApi: `https://mindhub-xj03.onrender.com/api/amazing`,
+            eventsPast: [],
+            eventsFuture: [],
+            categorys: [],
+            statisticsTable: {
+                higherPercentage: {},
+                lowerPercentage: {},
+                largerCapacity: {}
+            },
+            upcomingTable: [],
+            pastTable: []
         }
+    },
+    created(){
+        this.getData();
+    },
+    methods:{
+        getData: async function() {
+            try {
+                const response = await axios.get(this.urlApi);
+                this.filterByDate(response.data.currentDate, response.data.events);
+                this.getCategorys(response.data.events);
+                this.percentageRow();
+                this.upcomingTable = this.eventsRow(this.eventsFuture, `estimate`);
+                this.pastTable = this.eventsRow(this.eventsPast, `assistance`);
+                
+            } catch (error) {
+                const responseJson = await axios.get(`./assets/data/data.json`);
+                this.filterByDate(responseJson.data.currentDate, responseJson.data.events);
+                this.getCategorys(responseJson.data.events);
+                this.percentageRow();
+                this.upcomingTable = this.eventsRow(this.eventsFuture, `estimate`);
+                this.pastTable = this.eventsRow(this.eventsPast, `assistance`);
+            }
+        },
+        getCategorys: function(array) {
+            this.categorys = new Set(array.map(item => item.category));
+        },
+        filterByDate: function(currentDate, events) {
 
-        pastArray = filterByDate(data.currentDate, data.events, `past`);
-        upcomingArray = filterByDate(data.currentDate, data.events, `future`);
+            this.eventsPast = events.filter(item => item.date < currentDate);
+            this.eventsFuture = events.filter(item => item.date > currentDate);
+        },
+        largestToSmallest: function(array, property, relative = false, property2) {
 
-        printPercentageRow(containers[0], pastArray);
-
-        printEventsRows(containers[1], upcomingArray, `estimate`);
+            if (relative) {
+                array.map(item => {
+                    item.percentage = ((item[property] / item[property2]) * 100).toFixed(2);
+                });
         
-        printEventsRows(containers[2], pastArray, `assistance`);
+                array.sort((a, b) => b.percentage - a.percentage);
+        
+            } else {
+                array.sort((a, b) => b[property] - a[property]);
+            }
+        
+            return array;
+        },
+        percentageRow: function() {
+            this.statisticsTable.higherPercentage = (this.largestToSmallest(this.eventsPast, `assistance`, true, `capacity`))[0];
+            this.statisticsTable.lowerPercentage = ((this.largestToSmallest(this.eventsPast, `assistance`, true, `capacity`)).reverse())[0];
+            this.statisticsTable.largerCapacity = (this.largestToSmallest(this.eventsPast, `capacity`))[0];
+        },
+        eventsRow: function(array, property) {
+            let aux;
+            let arrayNew = [];
+            
+            this.categorys.forEach(category => {
+                let item = {};
+                aux = array.filter(event => event.category == category);
+                item.category = category;
 
-    } catch (error) {
-        console.log(error);
-    }
-};
+                item.revenues = aux.reduce((accumulator, currentElement) => {
+                    return accumulator + (currentElement.price * currentElement[property]);
+                }, 0);
+        
+                item.percentage = aux.reduce((accumulator, customElements) => {
+                    return accumulator + ((customElements[property] / customElements.capacity) * 100);
+                }, 0);
 
-function filterByDate(currentDate, arrayData, time) {
-    let newArray = [];
+                item.percentage = (item.percentage / aux.length).toFixed(2);
 
-    if (time == "past") {
-        newArray = arrayData.filter(item => item.date < currentDate);
-    } else {
-        newArray = arrayData.filter(item => item.date > currentDate);
-    }
+                arrayNew.push(item);
+            })
 
-    return newArray;
-};
-
-function largestToSmallest(array, property, relative = false, property2) {
-
-    if (relative) {
-        array.map(item => {
-            item.percentage = (item[property] / item[property2]) * 100;
-        });
-
-        array.sort((a, b) => b.percentage - a.percentage);
-
-    } else {
-        array.sort((a, b) => b[property] - a[property]);
-    }
-
-    return array;
-};
-
-function printPercentageRow(container, array) {
-
-    let higherPercentage = (largestToSmallest(array, `assistance`, true, `capacity`))[0];
-    let lowerPercentage = ((largestToSmallest(array, `assistance`, true, `capacity`)).reverse())[0];
-    let largerCapacity = (largestToSmallest(array, `capacity`))[0];
-
-    container.innerHTML = `
-        <tr>
-            <td>${higherPercentage.name} (${higherPercentage.percentage.toFixed(2)})</td>
-            <td>${lowerPercentage.name} (${lowerPercentage.percentage.toFixed(2)})</td>
-            <td>${largerCapacity.name} (${largerCapacity.capacity})</td>
-        </tr>
-    `;
-};
-
-function printEventsRows(container, array, property) {
-    let htmlComplete = ``;
-    let element = {
-        category: ``,
-        revenues: 0,
-        percentage: 0,
-        element: function() {
-            return `
-                <tr>
-                    <td>${this.category}</td>
-                    <td>${this.revenues}$</td>
-                    <td>${this.percentage.toFixed(2)}%</td>
-                </tr>
-            `
+            return arrayNew;
         }
-    };
-    let categorys = Array.from(new Set(array.map(item => item.category)));
-    let aux;
-
-    categorys.sort();
-    
-    categorys.forEach(item => {
-        aux = array.filter(object => object.category == item);
-
-        element.category = item;
-
-        element.revenues = aux.reduce((accumulator, currentElement) => {
-            return accumulator + (currentElement.price * currentElement[property]);
-        }, 0);
-
-        element.percentage = aux.reduce((accumulator, customElements) => {
-            return accumulator + ((customElements[property] / customElements.capacity) * 100)
-        }, 0);
-
-        element.percentage = element.percentage / aux.length;
-
-        htmlComplete += element.element();
-    });
-
-    container.innerHTML = htmlComplete;
-};
+    },
+}).mount('#app');

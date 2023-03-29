@@ -58,7 +58,7 @@
         </div>
     </header>
         
-    <main class="container-lg container-fluid p-3 mt-3">
+    <main class="container-lg container-fluid p-3 mt-3" id="app">
         <div class="table-group my-3 p-3 d-flex flex-column align-items-center">
             <table class="table text-white text-center layout">
                 <caption>
@@ -72,6 +72,11 @@
                     </tr>
                 </thead>
                 <tbody id="body1">
+                    <tr>
+                        <td>{{statisticsTable.higherPercentage.name}} ({{statisticsTable.higherPercentage.percentage}}%)</td>
+                        <td>{{statisticsTable.lowerPercentage.name}} ({{statisticsTable.lowerPercentage.percentage}}%)</td>
+                        <td>{{statisticsTable.largerCapacity.name}} ({{statisticsTable.largerCapacity.capacity}}ppl.)</td>
+                    </tr>
                 </tbody>
             </table>
             <table class="table text-white text-center layout">
@@ -86,6 +91,13 @@
                     </tr>
                 </thead>
                 <tbody id="body2">
+                    <template v-for="item of upcomingTable">
+                        <tr v-if="item.revenues">
+                            <td>{{item.category}}</td>
+                            <td>{{item.revenues}}$</td>
+                            <td>{{item.percentage}}%</td>
+                        </tr>
+                    </template>
                 </tbody>
             </table>
             <table class="table text-white text-center layout">
@@ -100,6 +112,13 @@
                     </tr>
                 </thead>
                 <tbody id="body3">
+                    <template v-for="item of pastTable">
+                        <tr v-if="item.revenues">
+                            <td>{{item.category}}</td>
+                            <td>{{item.revenues}}$</td>
+                            <td>{{item.percentage}}%</td>
+                        </tr>
+                    </template>
                 </tbody>
             </table>
         </div>
@@ -123,6 +142,8 @@
     </footer>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js" integrity="sha384-w76AqPfDkMBDXo30jS1Sgez6pr3x5MlQ1ZAGC+nuZB+EYdgRZgiwxhTBTkF7CXvN" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
     <script src="./assets/scripts/stats.js"></script>
 </body>
 </html>
