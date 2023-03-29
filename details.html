@@ -59,12 +59,12 @@
             </div>
         </article>
 
-        <article v-if="!time && found" class="d-flex px-4 justify-content-center align-items-center flex-column flex-lg-row" id="card-details">
+        <article v-if="!time && found" class="d-flex px-4 justify-content-center align-items-center flex-column flex-lg-row" id="card-details2">
             <figure class="col-lg-5 col-12" id="figure">
                 <img class="h-100 w-100" :src="event.image" alt="Food">
             </figure>
     
-            <div class="col-lg-5 col-12 p-4 d-flex flex-column justify-content-center" id="detailsText">
+            <div class="col-lg-5 col-12 p-4 d-flex flex-column justify-content-center" id="detailsText2">
                 <h5>{{event.name}}</h5>
                 <p>{{event.description}} The event was in {{event.place}} and had an assist of {{event.assistance}} people.</p>
                 <p>The cost per person was {{event.price}} and the date was {{event.date}}. For more information <a href="./contact.html">contact us.</a></p>
