@@ -1,66 +1,54 @@
 // Variables
 const { createApp } = Vue;
 
-createApp({
+const app = createApp({
     data() {
         return{
             urlApi: `https://mindhub-xj03.onrender.com/api/amazing`,
-            data: {},
             events: [],
+            eventsDb: [],
             checkboxs: [],
+            checkboxsFilter: [],
             search: ``,
         }
     },
-    async mounted(){
-        try {
-            const response = await axios.get(this.urlApi);
-            this.data = response.data;
-
-            // Los ordeno por relevancia segun la fecha
-            this.events = (this.data.events).sort((a, b) => {
-                if (a.date > b.date) {
-                    return -1;
-                }
-                if (a.date < b.date) {
-                    return 1;
-                }
-                return 0;
-            });
-            
-
-            this.checkboxs = new Set(this.events.map(item => item.category));
-
-        } catch (error) {
-            const responseJson = await axios.get(`./assets/data/data.json`);
-            this.data = responseJson.data;
-
-            this.events = this.data.events;
-
-            this.checkboxs = new Set(this.events.map(item => item.category));
-        }
+    created(){
+        this.getData();
+    },
+    mounted(){
     },
     methods:{
-        filterByCheckbox: function() {
-            let arrayNew = this.data.events;
-            let checkboxs = Array.from(document.querySelectorAll(`input[type='checkbox']`));
-            let checkboxsChecked = checkboxs.filter(item => item.checked);
-    
-            if (checkboxsChecked.length > 0) {
-                arrayNew = checkboxsChecked.reduce((accumulator, currentElement) => {
-                    return accumulator.concat(this.data.events.filter(item => currentElement.value == item.category))
-                },[]);
+        getData: async function() {
+            try {
+                const response = await axios.get(this.urlApi);
+                this.events = response.data.events;
+                this.eventsDb = response.data.events;
+                this.getCategorys(this.events);
+                
+            } catch (error) {
+                const responseJson = await axios.get(`./assets/data/data.json`);
+                this.events = responseJson.data.events;
+                this.eventsDb = responseJson.data.events;
+                this.getCategorys(this.events);
             }
-    
-            this.events = arrayNew;
         },
-        filterBySearcher: function() {
-            let arrayNew = this.events;
+        getCategorys: function(array) {
+            this.checkboxs = new Set(array.map(element => element.category));
+        }
+    },
+    computed:{
+        filterCards: function() {
+            let arrayNew = this.eventsDb;
+
+            if (this.checkboxsFilter.length > 0) {
+                arrayNew = this.eventsDb.filter(item => this.checkboxsFilter.includes(item.category));
+            }
     
             if (this.search != ``) {
                 arrayNew = arrayNew.filter(item => item.name.toLowerCase().includes(this.search.toLowerCase()));
             };
     
             this.events = arrayNew;
-        }
+        },
     }
 }).mount('#app');

@@ -12,11 +12,17 @@ body {
     background-size: cover;
     background-position: top;
     background-attachment: fixed;
-    min-height: 100vh;
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
+    height: 100vh;
+    padding: 0;
 }
+
+header {
+    min-height: 30% !important;
+}
+
+/* main {
+    min-height: 56.4% !important;
+} */
 
 nav {
     min-height: 13vh;
@@ -25,12 +31,8 @@ nav {
     border-bottom-right-radius: 1rem;
 }
 
-header {
-    min-height: 30vh;
-}
-
 footer {
-    min-height: 10vh;
+    min-height: 10% !important;
 }
 
 nav > a {
@@ -116,6 +118,10 @@ main {
 }
 
 /* Cards */
+#cards {
+    height: 100% !important;
+}
+
 .card {
     background-color: rgb(42, 5, 50);
     width: 280px;
@@ -290,7 +296,7 @@ button[type="submit"]:active,
 /* Details */
 
 #header-details {
-    min-height: 13vh;
+    min-height: 15% !important;
 }
 
 #header-details nav {
@@ -301,7 +307,7 @@ button[type="submit"]:active,
     min-height: 75vh;
 }
 
-#card-details {
+#card-details, #card-details2 {
     min-width: 280px;
     max-width: 90%;
     background: rgb(42, 5, 50);
@@ -309,13 +315,13 @@ button[type="submit"]:active,
     box-shadow: -6px -6px 2px black;
 }
 
-#detailsText {
+#detailsText, #detailsText2 {
     border: solid 2px #cd528b;
     height: 100%;
     margin: 1rem;
 }
 
-#card-details img {
+#card-details img, #card-details2 img {
     object-fit: cover;
     border: solid 2px #cd528b;
     box-shadow: -6px -6px 2px black;
@@ -327,7 +333,7 @@ button[type="submit"]:active,
     margin: 1rem;
 }
 
-#detailsText a {
+#detailsText a, #detailsText a {
     text-decoration: none;
     color: #cd1a6e;
 }
@@ -368,7 +374,7 @@ table {
     #figure {
         min-height: 300px;
     }
-    #detailsText {
+    #detailsText, #detailsText2 {
         min-height: 300px;
     }
 
@@ -382,13 +388,17 @@ table {
         width: 380px;
         height: 300px;
     }
-    #detailsText {
+    #detailsText, #detailsText2 {
         width: 380px;
         height: 300px;
     }
 
     #topButton {
         left: 92.8vw;
+    }
+
+    #main-details {
+        min-height: 71vh;
     }
 }
 
@@ -401,7 +411,8 @@ table {
         width: 500px;
         height: 400px;
     }
-    #detailsText {
+
+    #detailsText, #detailsText2 {
         width: 500px;
         height: 400px;
     }
@@ -409,10 +420,87 @@ table {
     #topButton {
         left: 91vw;
     }
+
+    #main-details {
+        min-height: 71.5%;
+    }
+}
+
+@media (min-width:2000px) {
+    #main-details {
+        min-height: 73%;
+    }
+
+    #icons-footer i {
+        font-size: 4rem;
+    }
+
+    footer span {
+        font-size: 4rem;
+    }
+
+    .nav-item a {
+        font-size: 2.8rem;
+    }
+
+    .navbar-brand img {
+        max-width: 70%;
+    }
+
+    #card-details, #card-details2 {
+        width: 100%;
+    }
+
+    #detailsText, #detailsText2 {
+        font-size: 1.4rem;
+    }
+
+    .card {
+        width: 350px;
+        height: 430px;
+    }
+
+    .card-home .card-text {
+        font-size: 1.3rem;
+    }
+
+    label > span {
+        font-size: 1.6rem;
+    }
+
+    .header > h1, h2 {
+        font-size: 4.5rem;
+    }
+
+    .carousel-control-prev-icon,
+    .carousel-control-next-icon {
+        padding: 2.2em;
+    }
+
+    main {
+        min-height: 56.4%;
+    }
+
+    .form-contact {
+        width: 80%;
+        font-size: 2rem;
+    }
+
+    .form-contact .form-label {
+        font-size: 2.5rem !important;
+    }
+
+    .form-contact button {
+        font-size: 2rem !important;
+    }
+
+    .table-group {
+        font-size: 1.65rem;
+    }
 }
 
 @media (max-width:424px) {
-    #detailsText {
+    #detailsText, #detailsText2 {
         padding: 15px!important;
     }
 

@@ -59,14 +59,14 @@
     </header>
         
     <main class="container-lg container-fluid mt-3" id="app">
-        <form class="row my-4 p-3 filter" @input="filterByCheckbox(); filterBySearcher()">
+        <form class="row my-4 p-3 filter">
             <fieldset class="col-12 d-flex justify-content-evenly flex-wrap pb-2" id="checkboxs">
-                <label class="d-flex justify-content-evenly align-items-center" v-for="(checkbox, index) of checkboxs">
-                    <input type="checkbox" :name="checkbox" :value="checkbox">
+                <label class="d-flex justify-content-evenly align-items-center" v-for="checkbox of checkboxs">
+                    <input type="checkbox" :name="checkbox" :value="checkbox" v-model="checkboxsFilter">
                     <span>{{checkbox}}</span>
                 </label>
             </fieldset>
-
+            {{filterCards}}
             <fieldset class="form-searcher col-12 d-flex justify-content-end">
                 <input class="me-2" type="search" placeholder="Search" aria-label="Search" v-model="search">
             </fieldset>
@@ -89,7 +89,7 @@
                     </div>
                 </div>
             </article>
-            <article v-if="eventsFilter.length === 0">
+            <article v-if="!eventsFilter.length">
                 <h2 class="text-center">Not Found</h2>
             </article>
         </div>
