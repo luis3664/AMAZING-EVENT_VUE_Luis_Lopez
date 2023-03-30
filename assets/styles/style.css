@@ -12,6 +12,10 @@ body {
     background-size: cover;
     background-position: top;
     background-attachment: fixed;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
 }
 
 nav {
@@ -108,7 +112,7 @@ main {
     background: rgba(83, 4, 54, 0.35);
     border-radius: 1rem;
     color: white;
-    min-height: 52vh;
+    min-height: 49vh;
 }
 
 /* Cards */
