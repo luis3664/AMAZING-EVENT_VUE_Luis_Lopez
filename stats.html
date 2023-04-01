@@ -94,7 +94,7 @@
                     <template v-for="item of upcomingTable">
                         <tr v-if="item.revenues">
                             <td>{{item.category}}</td>
-                            <td>{{item.revenues}}$</td>
+                            <td>${{item.revenues}}</td>
                             <td>{{item.percentage}}%</td>
                         </tr>
                     </template>
@@ -115,7 +115,7 @@
                     <template v-for="item of pastTable">
                         <tr v-if="item.revenues">
                             <td>{{item.category}}</td>
-                            <td>{{item.revenues}}$</td>
+                            <td>${{item.revenues}}</td>
                             <td>{{item.percentage}}%</td>
                         </tr>
                     </template>
